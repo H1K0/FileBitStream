@@ -27,3 +27,6 @@ unsigned long long int ifbstream::read(unsigned char len) {
 	}
 	return out;
 }
+void ifbstream::close() {
+	_fstream.close();
+}
