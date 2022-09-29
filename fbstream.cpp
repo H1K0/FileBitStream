@@ -4,6 +4,9 @@ ifbstream::ifbstream(std::string path) {
 	_fstream.open(path, std::ifstream::in | std::ifstream::binary);
 	_fstream.read(_buffer, 1);
 }
+ifbstream::~ifbstream() {
+	_fstream.close();
+}
 unsigned long long int ifbstream::read(unsigned char len) {
 	if (len > 64) {
 		throw std::length_error("Too big length");

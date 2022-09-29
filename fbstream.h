@@ -11,6 +11,7 @@ private:
 
 public:
 	ifbstream(std::string path);
+	~ifbstream();
 	unsigned long long int read(unsigned char len);
 	void close();
 };
