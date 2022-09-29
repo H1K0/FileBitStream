@@ -1,7 +1,7 @@
 #include "fbstream.h"
 
 ifbstream::ifbstream(std::string path) {
-	_fstream.open(path, std::ifstream::in | std::ifstream::binary);
+	_fstream.open(path, std::ifstream::binary);
 	_fstream.read(_buffer, 1);
 }
 ifbstream::~ifbstream() {
