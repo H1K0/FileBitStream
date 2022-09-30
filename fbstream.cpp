@@ -4,6 +4,10 @@ ifbstream::ifbstream(std::string path) {
 	_fstream.open(path, std::ifstream::binary);
 	_fstream.read(_buffer, 1);
 }
+ifbstream::ifbstream(std::wstring path) {
+	_fstream.open(path, std::ifstream::binary);
+	_fstream.read(_buffer, 1);
+}
 ifbstream::~ifbstream() {
 	_fstream.close();
 }
@@ -55,6 +59,9 @@ void ifbstream::close() {
 }
 
 ofbstream::ofbstream(std::string path) {
+	_fstream.open(path, std::ifstream::binary);
+}
+ofbstream::ofbstream(std::wstring path) {
 	_fstream.open(path, std::ifstream::binary);
 }
 ofbstream::~ofbstream() {
