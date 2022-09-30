@@ -2,10 +2,16 @@
 
 ifbstream::ifbstream(std::string path) {
 	_fstream.open(path, std::ifstream::binary);
+	if (!_fstream) {
+		throw std::runtime_error("Error opening file");
+	}
 	_fstream.read(_buffer, 1);
 }
 ifbstream::ifbstream(std::wstring path) {
 	_fstream.open(path, std::ifstream::binary);
+	if (!_fstream) {
+		throw std::runtime_error("Error opening file");
+	}
 	_fstream.read(_buffer, 1);
 }
 ifbstream::~ifbstream() {
@@ -60,9 +66,15 @@ void ifbstream::close() {
 
 ofbstream::ofbstream(std::string path) {
 	_fstream.open(path, std::ifstream::binary);
+	if (!_fstream) {
+		throw std::runtime_error("Error opening file");
+	}
 }
 ofbstream::ofbstream(std::wstring path) {
 	_fstream.open(path, std::ifstream::binary);
+	if (!_fstream) {
+		throw std::runtime_error("Error opening file");
+	}
 }
 ofbstream::~ofbstream() {
 	_buffer[0] <<= _bitpos;
