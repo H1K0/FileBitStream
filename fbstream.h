@@ -12,7 +12,7 @@ private:
 public:
 	ifbstream(std::string path);
 	~ifbstream();
-	unsigned long long int read(unsigned char len);
+	unsigned long long int read(unsigned char blocksize);
 	void rewind();
 	void close();
 };
@@ -26,6 +26,6 @@ private:
 public:
 	ofbstream(std::string path);
 	~ofbstream();
-	void write(unsigned long long int data, unsigned char len);
+	void write(unsigned long long int data, unsigned char blocksize);
 	void close();
 };

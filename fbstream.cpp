@@ -7,40 +7,40 @@ ifbstream::ifbstream(std::string path) {
 ifbstream::~ifbstream() {
 	_fstream.close();
 }
-unsigned long long int ifbstream::read(unsigned char len) {
-	if (len > 64) {
-		throw std::length_error("Too big length");
+unsigned long long int ifbstream::read(unsigned char blocksize) {
+	if (blocksize > 64) {
+		throw std::overflow_error("Too big length");
 	}
 	if (_fstream.eof()) {
 		throw std::out_of_range("Length out of range");
 	}
 	unsigned long long int out = 0;
-	if (_bitpos < len) {
+	if (_bitpos < blocksize) {
 		out |= _buffer[0] & ((1 << _bitpos) - 1);
-		len -= _bitpos;
+		blocksize -= _bitpos;
 		_fstream.read(_buffer, 1);
 		_bitpos = 8;
 	}
-	if (_fstream.eof() && len) {
+	if (_fstream.eof() && blocksize) {
 		throw std::out_of_range("Length out of range");
 	}
-	while (len > 8) {
+	while (blocksize > 8) {
 		if (_fstream.eof()) {
 			throw std::out_of_range("Length out of range");
 		}
 		out = out << 8 | _buffer[0];
-		len -= 8;
+		blocksize -= 8;
 		_fstream.read(_buffer, 1);
 	}
-	if (len) {
+	if (blocksize) {
 		if (_fstream.eof()) {
 			throw std::out_of_range("Length out of range");
 		}
-	out = out << len | _buffer[0] >> _bitpos - len & ((1 << len) - 1);
-	if ((_bitpos -= len) == 0) {
-		_fstream.read(_buffer, 1);
-		_bitpos = 8;
-	}
+		out = out << blocksize | _buffer[0] >> _bitpos - blocksize & ((1 << blocksize) - 1);
+		if ((_bitpos -= blocksize) == 0) {
+			_fstream.read(_buffer, 1);
+			_bitpos = 8;
+		}
 	}
 	return out;
 }
@@ -62,23 +62,23 @@ ofbstream::~ofbstream() {
 	_fstream.write(_buffer, 1);
 	_fstream.close();
 }
-void ofbstream::write(unsigned long long int data, unsigned char len) {
-	if (len > 64) {
-		throw std::length_error("Too big length");
+void ofbstream::write(unsigned long long int data, unsigned char blocksize) {
+	if (blocksize > 64) {
+		throw std::overflow_error("Too big length");
 	}
-	data &= (1 << len) - 1;
-	if (_bitpos < len) {
-		_buffer[0] = _buffer[0] << _bitpos | data >> (len -= _bitpos);
+	data &= (1 << blocksize) - 1;
+	if (_bitpos < blocksize) {
+		_buffer[0] = _buffer[0] << _bitpos | data >> (blocksize -= _bitpos);
 		_fstream.write(_buffer, 1);
 		_bitpos = 8;
 	}
-	while (len > 8) {
-		_buffer[0] = data >> (len -= 8);
+	while (blocksize > 8) {
+		_buffer[0] = data >> (blocksize -= 8);
 		_fstream.write(_buffer, 1);
 	}
-	if (len) {
-		_buffer[0] = data & (1 << len) - 1;
-		_bitpos -= len;
+	if (blocksize) {
+		_buffer[0] = data & (1 << blocksize) - 1;
+		_bitpos -= blocksize;
 	}
 }
 void ofbstream::close() {
