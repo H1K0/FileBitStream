@@ -53,3 +53,36 @@ void ifbstream::rewind() {
 void ifbstream::close() {
 	_fstream.close();
 }
+
+ofbstream::ofbstream(std::string path) {
+	_fstream.open(path, std::ifstream::binary);
+}
+ofbstream::~ofbstream() {
+	_buffer[0] <<= _bitpos;
+	_fstream.write(_buffer, 1);
+	_fstream.close();
+}
+void ofbstream::write(unsigned long long int data, unsigned char len) {
+	if (len > 64) {
+		throw std::length_error("Too big length");
+	}
+	data &= (1 << len) - 1;
+	if (_bitpos < len) {
+		_buffer[0] = _buffer[0] << _bitpos | data >> (len -= _bitpos);
+		_fstream.write(_buffer, 1);
+		_bitpos = 8;
+	}
+	while (len > 8) {
+		_buffer[0] = data >> (len -= 8);
+		_fstream.write(_buffer, 1);
+	}
+	if (len) {
+		_buffer[0] = data & (1 << len) - 1;
+		_bitpos -= len;
+	}
+}
+void ofbstream::close() {
+	_buffer[0] <<= _bitpos;
+	_fstream.write(_buffer, 1);
+	_fstream.close();
+}

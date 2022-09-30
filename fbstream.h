@@ -16,3 +16,16 @@ public:
 	void rewind();
 	void close();
 };
+
+class ofbstream {
+private:
+	std::ofstream _fstream;
+	unsigned long long int _bitpos = 8;
+	char _buffer[1] = { 0 };
+
+public:
+	ofbstream(std::string path);
+	~ofbstream();
+	void write(unsigned long long int data, unsigned char len);
+	void close();
+};
