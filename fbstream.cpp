@@ -44,6 +44,12 @@ unsigned long long int ifbstream::read(unsigned char len) {
 	}
 	return out;
 }
+void ifbstream::rewind() {
+	_fstream.clear();
+	_fstream.seekg(0);
+	_bitpos = 8;
+	_buffer[1] = { 0 };
+}
 void ifbstream::close() {
 	_fstream.close();
 }
