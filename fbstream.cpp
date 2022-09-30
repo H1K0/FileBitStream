@@ -28,7 +28,7 @@ unsigned long long int ifbstream::read(unsigned char blocksize) {
 		if (_fstream.eof()) {
 			throw std::out_of_range("Length out of range");
 		}
-		out = out << 8 | _buffer[0];
+		out = out << 8 | _buffer[0] & 0b11111111;
 		blocksize -= 8;
 		_fstream.read(_buffer, 1);
 	}
