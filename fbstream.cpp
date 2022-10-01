@@ -96,8 +96,11 @@ void ofbstream::write(unsigned long long int data, unsigned char blocksize) {
 		_fstream.write(_buffer, 1);
 	}
 	if (blocksize) {
-		_buffer[0] = data & (1 << blocksize) - 1;
+		_buffer[0] = _buffer[0] << blocksize | data & (1 << blocksize) - 1;
 		_bitpos -= blocksize;
+		if (!_bitpos) {
+			_bitpos = 8;
+		}
 	}
 }
 void ofbstream::close() {
